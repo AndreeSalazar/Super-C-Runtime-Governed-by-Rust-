@@ -1,0 +1,26 @@
+[package]
+name = "super-c-runtime"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "Rust Governor for Super-C Runtime - High-performance native execution stack"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "super_c_runtime"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+
+[build-dependencies]
+cc = "1.0"
+
+[features]
+default = []
+cuda = []
+asm = []
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

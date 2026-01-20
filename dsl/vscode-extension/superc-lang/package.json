@@ -1,0 +1,50 @@
+{
+    "name": "superc-lang",
+    "displayName": "SuperC Language",
+    "description": "Syntax highlighting, snippets and IntelliSense for SuperC DSL (.sc files)",
+    "version": "0.2.0",
+    "publisher": "superc",
+    "icon": "icon.png",
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Snippets"
+    ],
+    "keywords": [
+        "superc",
+        "dsl",
+        "gpu",
+        "cuda",
+        "hip",
+        "compute"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "superc",
+                "aliases": ["SuperC", "superc", "SC"],
+                "extensions": [".sc"],
+                "configuration": "./language-configuration.json",
+                "icon": {
+                    "light": "./icon.png",
+                    "dark": "./icon.png"
+                }
+            }
+        ],
+        "grammars": [
+            {
+                "language": "superc",
+                "scopeName": "source.superc",
+                "path": "./syntaxes/superc.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "superc",
+                "path": "./snippets/superc.json"
+            }
+        ]
+    }
+}

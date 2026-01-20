@@ -1,104 +1,194 @@
-# SuperC DSL - Sintaxis Simplificada
+# SuperC DSL
 
-Un lenguaje minimalista que se traduce a **Rust → C → CUDA/HIP/ASM**.
-
-## Filosofía
+**Lenguaje de cómputo unificado** - Escribe una vez, ejecuta en cualquier backend.
 
 ```
-Escribes poco → Ejecutas mucho
+.sc → CPU | GPU | ASM (automático)
 ```
 
-## Ejemplo Básico
+---
+
+## Instalación
+
+```powershell
+# Windows
+cd dsl
+cargo build --release
+copy target\release\superc.exe C:\Windows\System32\
+```
+
+Ahora puedes usar `superc` desde cualquier lugar.
+
+---
+
+## Inicio Rápido
+
+### 1. Crear archivo `ejemplo.sc`
 
 ```superc
-// Archivo: ejemplo.sc
+data a: f32[100]
+data b: f32[100]
+data c: f32[100]
 
-// Definir datos
-data vec_a: f32[1000]
-data vec_b: f32[1000]
-data result: f32[1000]
-
-// Operación paralela (auto-detecta GPU/CPU)
-parallel {
-    result = vec_a + vec_b
+seq {
+    for i = 0:100 {
+        a[i] = i * 1.0
+        b[i] = i * 2.0
+    }
 }
 
-// Operación secuencial
+parallel {
+    for i = 0:100 {
+        c[i] = a[i] + b[i]
+    }
+}
+
 seq {
-    print(result[0])
+    print(c[0])
+    print(c[99])
 }
 ```
+
+### 2. Ejecutar
+
+```powershell
+superc run ejemplo.sc
+```
+
+Salida:
+```
+🚀 SuperC Compute Engine
+========================
+📂 Archivo: ejemplo.sc
+⚙️  Preferencia: Auto
+------------------------
+0.000000
+297.000000
+------------------------
+✅ Backend: Pure CPU
+⏱️  Tiempo: 250 μs
+========================
+```
+
+---
+
+## Comandos
+
+| Comando | Descripción |
+|---------|-------------|
+| `superc run archivo.sc` | Ejecuta directamente |
+| `superc run archivo.sc --gpu` | Forzar GPU/HIP-CPU |
+| `superc run archivo.sc --asm` | Forzar ASM SIMD |
+| `superc run archivo.sc --cpu` | Forzar CPU puro |
+| `superc emit archivo.sc --rust` | Ver código Rust |
+| `superc emit archivo.sc --c` | Ver código C |
+| `superc emit archivo.sc --asm` | Ver código NASM |
+
+---
 
 ## Sintaxis
 
-### Tipos de Datos
+### Datos
+
 ```superc
 data nombre: tipo[tamaño]
-
-// Tipos soportados:
-// i32, i64, f32, f64, bool
+data escalar: tipo
 ```
 
+**Tipos:** `i32`, `i64`, `f32`, `f64`, `bool`
+
 ### Bloques de Ejecución
+
 ```superc
-// Ejecutar en GPU si disponible, sino CPU
-parallel { ... }
-
-// Ejecutar en CPU secuencial
-seq { ... }
-
-// Forzar GPU (error si no hay)
-gpu { ... }
-
-// Forzar CPU con ASM optimizado
-asm { ... }
+seq { }        // CPU secuencial
+parallel { }   // Auto GPU/CPU
+gpu { }        // Forzar GPU
+asm { }        // ASM optimizado
 ```
 
 ### Operaciones
+
 ```superc
-// Aritméticas (element-wise para arrays)
-c = a + b
-c = a - b
-c = a * b
-c = a / b
+c = a + b      // Suma
+c = a - b      // Resta
+c = a * b      // Multiplicación
+c = a / b      // División
 
-// Reducciones
-sum = reduce(+, array)
-max = reduce(max, array)
-min = reduce(min, array)
-
-// Funciones matemáticas
-b = sqrt(a)
-b = sin(a)
-b = cos(a)
-b = exp(a)
-b = log(a)
+sum = reduce(+, arr)    // Suma total
+max = reduce(max, arr)  // Máximo
+min = reduce(min, arr)  // Mínimo
 ```
 
-### Funciones
+### Control de Flujo
+
 ```superc
-fn nombre(param: tipo) -> tipo {
-    ...
+for i = 0:100 {
+    // código
+}
+
+if x > 0 {
+    // código
+} else {
+    // código
 }
 ```
 
-## Traducción
+### Funciones Matemáticas
+
+```superc
+y = sqrt(x)
+y = sin(x)
+y = cos(x)
+y = exp(x)
+y = log(x)
+```
+
+---
+
+## Backends
+
+| Backend | Cuándo se usa |
+|---------|---------------|
+| **CUDA GPU** | NVIDIA disponible |
+| **HIP GPU** | AMD disponible |
+| **HIP-CPU** | Fallback GPU portable |
+| **ASM SIMD** | Workloads medianos |
+| **Pure CPU** | Workloads pequeños |
+
+El motor selecciona automáticamente el mejor backend.
+
+---
+
+## Estructura del Proyecto
 
 ```
-ejemplo.sc  →  Rust (AST)  →  C (código)  →  CUDA/HIP/ASM (ejecución)
+dsl/
+├── superc.exe          # Ejecutable
+├── examples/           # Ejemplos .sc
+│   ├── hello.sc
+│   ├── vector_math.sc
+│   └── batch_compute.sc
+├── docs/               # Documentación
+│   ├── SYNTAX.md
+│   ├── BACKENDS.md
+│   └── EXAMPLES.md
+└── vscode-extension/   # Extensión VS Code
+    └── superc-lang/
 ```
 
-## Uso
+---
 
-```bash
-# Compilar DSL a ejecutable
-superc build ejemplo.sc
+## Extensión VS Code
 
-# Ejecutar directamente
-superc run ejemplo.sc
+Instala la extensión para colorear sintaxis:
 
-# Ver código generado
-superc emit ejemplo.sc --target=rust
-superc emit ejemplo.sc --target=c
-superc emit ejemplo.sc --target=cuda
+```powershell
+cd dsl/vscode-extension/superc-lang
+code --install-extension superc-lang-0.1.0.vsix
 ```
+
+---
+
+## Licencia
+
+MIT

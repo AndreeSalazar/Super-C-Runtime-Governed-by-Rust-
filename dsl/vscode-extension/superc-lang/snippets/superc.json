@@ -1,0 +1,254 @@
+{
+    "Data Array Declaration": {
+        "prefix": ["data", "arr", "array"],
+        "body": [
+            "data ${1:name}: ${2|f32,f64,i32,i64,bool|}[${3:size}]"
+        ],
+        "description": "Declare a data array"
+    },
+    "Data Scalar Declaration": {
+        "prefix": ["scalar", "var"],
+        "body": [
+            "data ${1:name}: ${2|f32,f64,i32,i64,bool|}"
+        ],
+        "description": "Declare a scalar variable"
+    },
+    "Sequential Block": {
+        "prefix": ["seq", "sequential"],
+        "body": [
+            "seq {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Sequential CPU execution block"
+    },
+    "Parallel Block": {
+        "prefix": ["parallel", "par"],
+        "body": [
+            "parallel {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Parallel execution block (auto GPU/CPU)"
+    },
+    "GPU Block": {
+        "prefix": ["gpu"],
+        "body": [
+            "gpu {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Force GPU execution block"
+    },
+    "ASM Block": {
+        "prefix": ["asm", "simd"],
+        "body": [
+            "asm {",
+            "\t$0",
+            "}"
+        ],
+        "description": "ASM SIMD optimized execution block"
+    },
+    "For Loop": {
+        "prefix": ["for", "loop"],
+        "body": [
+            "for ${1:i} = ${2:0}:${3:100} {",
+            "\t$0",
+            "}"
+        ],
+        "description": "For loop with range"
+    },
+    "If Statement": {
+        "prefix": ["if"],
+        "body": [
+            "if ${1:condition} {",
+            "\t$0",
+            "}"
+        ],
+        "description": "If conditional statement"
+    },
+    "If-Else Statement": {
+        "prefix": ["ife", "ifelse"],
+        "body": [
+            "if ${1:condition} {",
+            "\t$2",
+            "} else {",
+            "\t$0",
+            "}"
+        ],
+        "description": "If-else conditional statement"
+    },
+    "Function Definition": {
+        "prefix": ["fn", "func", "function"],
+        "body": [
+            "fn ${1:name}(${2:param}: ${3:f32}) -> ${4:f32} {",
+            "\t$0",
+            "\treturn ${5:result}",
+            "}"
+        ],
+        "description": "Define a function"
+    },
+    "Print": {
+        "prefix": ["print", "log"],
+        "body": [
+            "print(${1:value})"
+        ],
+        "description": "Print a value"
+    },
+    "Reduce Sum": {
+        "prefix": ["sum", "reducesum"],
+        "body": [
+            "${1:result} = reduce(+, ${2:array})"
+        ],
+        "description": "Sum all elements in array"
+    },
+    "Reduce Max": {
+        "prefix": ["max", "reducemax"],
+        "body": [
+            "${1:result} = reduce(max, ${2:array})"
+        ],
+        "description": "Find maximum in array"
+    },
+    "Reduce Min": {
+        "prefix": ["min", "reducemin"],
+        "body": [
+            "${1:result} = reduce(min, ${2:array})"
+        ],
+        "description": "Find minimum in array"
+    },
+    "Square Root": {
+        "prefix": ["sqrt"],
+        "body": [
+            "sqrt(${1:x})"
+        ],
+        "description": "Square root function"
+    },
+    "Sine": {
+        "prefix": ["sin"],
+        "body": [
+            "sin(${1:x})"
+        ],
+        "description": "Sine function"
+    },
+    "Cosine": {
+        "prefix": ["cos"],
+        "body": [
+            "cos(${1:x})"
+        ],
+        "description": "Cosine function"
+    },
+    "Exponential": {
+        "prefix": ["exp"],
+        "body": [
+            "exp(${1:x})"
+        ],
+        "description": "Exponential function"
+    },
+    "Logarithm": {
+        "prefix": ["log"],
+        "body": [
+            "log(${1:x})"
+        ],
+        "description": "Natural logarithm function"
+    },
+    "Vector Add Template": {
+        "prefix": ["vecadd", "vectoradd"],
+        "body": [
+            "// Vector Addition",
+            "data ${1:a}: f32[${2:1000}]",
+            "data ${3:b}: f32[$2]",
+            "data ${4:c}: f32[$2]",
+            "",
+            "seq {",
+            "\tfor i = 0:$2 {",
+            "\t\t$1[i] = i * 1.0",
+            "\t\t$3[i] = i * 2.0",
+            "\t}",
+            "}",
+            "",
+            "parallel {",
+            "\tfor i = 0:$2 {",
+            "\t\t$4[i] = $1[i] + $3[i]",
+            "\t}",
+            "}",
+            "",
+            "seq {",
+            "\tprint($4[0])",
+            "}"
+        ],
+        "description": "Complete vector addition template"
+    },
+    "Batch Processing Template": {
+        "prefix": ["batch", "pipeline"],
+        "body": [
+            "// Batch Processing Pipeline",
+            "data input: f32[${1:1000}]",
+            "data output: f32[$1]",
+            "data total: f32",
+            "",
+            "// Initialize",
+            "seq {",
+            "\tfor i = 0:$1 {",
+            "\t\tinput[i] = i * ${2:0.1}",
+            "\t}",
+            "}",
+            "",
+            "// Process",
+            "parallel {",
+            "\tfor i = 0:$1 {",
+            "\t\toutput[i] = ${3:input[i] * 2.0}",
+            "\t}",
+            "}",
+            "",
+            "// Reduce",
+            "seq {",
+            "\ttotal = reduce(+, output)",
+            "\tprint(total)",
+            "}"
+        ],
+        "description": "Complete batch processing template"
+    },
+    "GPU Compute Template": {
+        "prefix": ["gpucompute", "cudacompute"],
+        "body": [
+            "// GPU Compute",
+            "data matrix: f32[${1:10000}]",
+            "data result: f32[$1]",
+            "",
+            "seq {",
+            "\tfor i = 0:$1 {",
+            "\t\tmatrix[i] = i * 0.001",
+            "\t}",
+            "}",
+            "",
+            "gpu {",
+            "\tfor i = 0:$1 {",
+            "\t\tresult[i] = ${2:matrix[i] * matrix[i]}",
+            "\t}",
+            "}",
+            "",
+            "seq {",
+            "\tprint(result[0])",
+            "}"
+        ],
+        "description": "GPU compute template"
+    },
+    "Comment Header": {
+        "prefix": ["header", "comment"],
+        "body": [
+            "// ============================================",
+            "// ${1:Title}",
+            "// ${2:Description}",
+            "// ============================================",
+            ""
+        ],
+        "description": "Comment header block"
+    },
+    "Return Statement": {
+        "prefix": ["return", "ret"],
+        "body": [
+            "return ${1:value}"
+        ],
+        "description": "Return statement"
+    }
+}

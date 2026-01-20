@@ -1,13 +1,21 @@
 {
     "name": "superc-lang",
     "displayName": "SuperC Language",
-    "description": "Syntax highlighting, snippets and IntelliSense for SuperC DSL (.sc files)",
-    "version": "0.2.0",
+    "description": "Syntax highlighting, IntelliSense, and snippets for SuperC DSL (.sc files)",
+    "version": "0.3.0",
     "publisher": "superc",
-    "icon": "icon.png",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/superc/superc-lang"
+    },
     "engines": {
         "vscode": "^1.60.0"
     },
+    "main": "./extension.js",
+    "activationEvents": [
+        "onLanguage:superc"
+    ],
     "categories": [
         "Programming Languages",
         "Snippets"
@@ -26,11 +34,7 @@
                 "id": "superc",
                 "aliases": ["SuperC", "superc", "SC"],
                 "extensions": [".sc"],
-                "configuration": "./language-configuration.json",
-                "icon": {
-                    "light": "./icon.png",
-                    "dark": "./icon.png"
-                }
+                "configuration": "./language-configuration.json"
             }
         ],
         "grammars": [

@@ -181,41 +181,72 @@ init_gpu(GpuPreference::PreferCpu)?;   // HIP-CPU fallback
 
 ---
 
-## SuperC DSL - Sintaxis Simplificada
+## 🚀 SuperC DSL - Motor de Cómputo Unificado
 
-Escribe código simple que se traduce automáticamente a Rust → C → CUDA/HIP/ASM:
+**[📖 Documentación Completa del DSL →](./dsl/README.md)**
+
+Un lenguaje simplificado que ejecuta automáticamente en el mejor backend disponible:
+
+```
+.sc → CPU | GPU | ASM (automático)
+```
+
+### Ejemplo Rápido
 
 ```superc
-// archivo: ejemplo.sc
+data a: f32[1000]
+data b: f32[1000]
+data c: f32[1000]
 
-data vec_a: f32[1000]
-data vec_b: f32[1000]
-data result: f32[1000]
-
-// Ejecuta en GPU si disponible, sino CPU
 parallel {
     for i = 0:1000 {
-        result[i] = vec_a[i] + vec_b[i]
+        c[i] = a[i] + b[i]
     }
 }
 
 seq {
-    print(result[0])
+    print(c[0])
 }
 ```
 
-### Compilar DSL
+### Ejecutar
 
-```bash
+```powershell
 cd dsl
 cargo build --release
 
-# Emitir código Rust
-./target/release/superc emit ejemplo.sc --rust
+# Ejecutar directamente (auto-selección de backend)
+.\target\release\superc.exe run ejemplo.sc
 
-# Emitir código C
-./target/release/superc emit ejemplo.sc --c
+# Forzar backend específico
+.\target\release\superc.exe run ejemplo.sc --gpu   # GPU/HIP-CPU
+.\target\release\superc.exe run ejemplo.sc --asm   # ASM SIMD
+.\target\release\superc.exe run ejemplo.sc --cpu   # CPU puro
+
+# Ver código generado
+.\target\release\superc.exe emit ejemplo.sc --rust
+.\target\release\superc.exe emit ejemplo.sc --c
+.\target\release\superc.exe emit ejemplo.sc --asm
 ```
+
+### Extensión VS Code
+
+Instala la extensión para **coloreo de sintaxis** e **IntelliSense inteligente**:
+
+```powershell
+# Instalar desde VSIX
+# En VS Code: Ctrl+Shift+P → "Extensions: Install from VSIX..."
+# Seleccionar: dsl/vscode-extension/superc-lang/superc-lang-0.3.0.vsix
+```
+
+**Características:**
+- Coloreo de sintaxis para `.sc`
+- Autocompletado con `Ctrl+Space`
+- Templates completos (`batch`, `vecadd`, `gpucompute`)
+- Hover documentation
+- Signature help para funciones
+
+**[📖 Ver documentación completa del DSL →](./dsl/README.md)**
 
 ---
 

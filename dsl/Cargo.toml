@@ -1,0 +1,17 @@
+[package]
+name = "superc-dsl"
+version = "0.1.0"
+edition = "2021"
+description = "SuperC DSL - Simplified syntax that compiles to Rust/C/CUDA/HIP"
+
+[lib]
+name = "superc_dsl"
+path = "src/lib.rs"
+
+[[bin]]
+name = "superc"
+path = "src/main.rs"
+
+[dependencies]
+
+[dev-dependencies]

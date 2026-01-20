@@ -5,9 +5,11 @@
 
 mod native;
 mod cuda;
+mod hip;
 
 pub use native::*;
 pub use cuda::*;
+pub use hip::*;
 
 use std::ffi::c_void;
 

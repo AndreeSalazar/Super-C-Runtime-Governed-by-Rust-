@@ -252,4 +252,4 @@ Instala la extensión para **coloreo de sintaxis** e **IntelliSense inteligente*
 
 ## License
 
-MIT / Apache-2.0
+Apache-2.0
